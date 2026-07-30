@@ -1,4 +1,18 @@
-from app import add_numbers
+import pytest
+from app import app
 
-def test_add_numbers():
-    assert add_numbers(2, 3) == 5
+@pytest.fixture
+def client():
+    app.config["TESTING"] = True
+    with app.test_client() as client:
+        yield client
+
+def test_home_endpoint(client):
+    response = client.get("/")
+    assert response.status_code == 200
+    assert response.json == {"message": "Hello, CI/CD Pipeline!"}
+
+def test_add_endpoint(client):
+    response = client.get("/add/5/10")
+    assert response.status_code == 200
+    assert response.json == {"result": 15}
