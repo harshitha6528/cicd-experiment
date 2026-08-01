@@ -1,4 +1,6 @@
-flask
+Flask
 gunicorn
 pytest
 pytest-cov
+Flask-SQLAlchemy
+psycopg2-binary
