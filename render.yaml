@@ -1,0 +1,7 @@
+services: 
+  - type: web 
+    name: cicd-experiment-1 
+    env: python 
+    buildCommand: pip install -r requirements.txt 
+    startCommand: gunicorn app:app 
+    startCommand: gunicorn app:app 
