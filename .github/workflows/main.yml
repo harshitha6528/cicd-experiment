@@ -1,4 +1,4 @@
-name: CI Pipeline
+name: CI/CD Pipeline
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
     branches: [ "main" ]
 
 jobs:
-  build-and-test:
+  test-and-build:
     runs-on: ubuntu-latest
 
     steps:
@@ -24,6 +24,10 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
 
-    - name: Test application
+    - name: Run unit tests
       run: |
         python -m unittest discover -s .
+
+    - name: Build Docker image
+      run: |
+        docker build -t cicd-flask-app .
