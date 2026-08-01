@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CI/CD Database Dashboard</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 600px; margin: 40px auto; padding: 20px; }
+        h1 { color: #333; }
+        input[type="text"] { padding: 10px; width: 70%; margin-right: 10px; }
+        button { padding: 10px 15px; background-color: #28a745; color: white; border: none; cursor: pointer; }
+        button:hover { background-color: #218838; }
+        ul { list-style-type: none; padding: 0; margin-top: 20px; }
+        li { background: #f4f4f4; margin: 5px 0; padding: 10px; border-radius: 4px; }
+    </style>
+</head>
+<body>
+
+    <h1>🚀 Cloud DB Dashboard</h1>
+    <p>Manage PostgreSQL records live via CI/CD</p>
+
+    <form id="itemForm">
+        <input type="text" id="itemName" placeholder="Enter item name..." required>
+        <button type="submit">Add Item</button>
+    </form>
+
+    <h2>Database Items:</h2>
+    <ul id="itemsList"></ul>
+
+    <script>
+        const API_URL = '/items';
+
+        // Fetch and display items from backend
+        async function fetchItems() {
+            const res = await fetch(API_URL);
+            const items = await res.json();
+            const list = document.getElementById('itemsList');
+            list.innerHTML = '';
+            items.forEach(item => {
+                const li = document.createElement('li');
+                li.textContent = `#${item.id}: ${item.name}`;
+                list.appendChild(li);
+            });
+        }
+
+        // Add item on form submission
+        document.getElementById('itemForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const input = document.getElementById('itemName');
+            await fetch(API_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name: input.value })
+            });
+            input.value = '';
+            fetchItems();
+        });
+
+        // Load items when page loads
+        fetchItems();
+    </script>
+</body>
+</html>

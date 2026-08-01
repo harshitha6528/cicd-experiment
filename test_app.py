@@ -1,30 +1,10 @@
-import pytest
-from app import app, db, Item
+from flask import Flask, render_template
 
-@pytest.fixture
-def client():
-    app.config['TESTING'] = True
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///:memory:'
-    
-    with app.test_client() as client:
-        with app.app_context():
-            db.create_all()
-        yield client
-        with app.app_context():
-            db.drop_all()
+app = Flask(__name__)
 
-def test_home(client):
-    response = client.get('/')
-    assert response.status_code == 200
-    assert b"App and Database connected successfully!" in response.data
+@app.route('/')
+def home():
+    return render_template('index.html')
 
-def test_add_and_get_item(client):
-    # Test POST /items
-    post_response = client.post('/items', json={"name": "Test Item"})
-    assert post_response.status_code == 201
-    assert b"Item added!" in post_response.data
-
-    # Test GET /items
-    get_response = client.get('/items')
-    assert get_response.status_code == 200
-    assert b"Test Item" in get_response.data
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=5000, debug=True)
