@@ -1,10 +1,15 @@
-from flask import Flask, render_template
+import unittest
+from app import app
 
-app = Flask(__name__)
+class BasicTests(unittest.TestCase):
 
-@app.route('/')
-def home():
-    return render_template('index.html')
+    def setUp(self):
+        self.app = app.test_client()
+        self.app.testing = True
 
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    def test_home_page(self):
+        response = self.app.get('/')
+        self.assertEqual(response.status_code, 200)
+
+if __name__ == "__main__":
+    unittest.main()
